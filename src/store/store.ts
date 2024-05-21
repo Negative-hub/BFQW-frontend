@@ -1,14 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit';
 
-import metagraphSlice from '@/store/metagraph.slice.ts';
-import metanodeSlice from '@/store/metanode.slice.ts';
-import modelSlice from '@/store/models.slice.ts';
+import metagraphSlice from '@/store/metagraph/metagraph.slice.ts';
+import modelSlice from '@/store/model/model.slice.ts';
 
 export const store = configureStore({
 	reducer: {
 		models: modelSlice,
-		metagraph: metagraphSlice,
-		metanodes: metanodeSlice
+		metagraph: metagraphSlice
 	}
 });
 

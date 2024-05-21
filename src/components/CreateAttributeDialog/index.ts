@@ -1,0 +1,1 @@
+export {CreateAttributeDialog} from './CreateAttributeDialog.tsx';

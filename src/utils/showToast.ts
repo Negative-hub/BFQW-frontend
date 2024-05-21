@@ -1,7 +1,7 @@
 import {toast} from 'react-toastify';
 
 export interface IToastParams {
-	type: 'success' | 'warning';
+	type: 'success' | 'warning' | 'error';
 	message: string;
 }
 

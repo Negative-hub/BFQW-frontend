@@ -1,125 +1,92 @@
 import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
-import {Dropdown} from 'primereact/dropdown';
 import {InputText} from 'primereact/inputtext';
-import {MultiSelect} from 'primereact/multiselect';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {CreateNodePayload} from '@/api/nodes';
-import {CreateNodeDialogProps, CreateNodeProperties} from '@/components/CreateNodeDialog/types.ts';
-import {useAppSelector} from '@/hooks/store.ts';
+import {useAppDispatch, useAppSelector} from '@/hooks/store.ts';
+import {createNodeAsyncThunk} from '@/store/metagraph/async/nodes.ts';
+import showToast from '@/utils/showToast.ts';
 
-export const CreateNodeDialog: React.FunctionComponent<CreateNodeDialogProps> = (props: CreateNodeDialogProps) => {
-	const {
-		isVisible,
-		onHide,
-		onCreate
-	} = props;
+export const CreateNodeDialog: React.FunctionComponent = () => {
+	const appDispatch = useAppDispatch();
+	const selectedModel = useAppSelector((s) => s.models.selectedModel);
 
-	const modelsOptions = useAppSelector((selector) => selector.models.models);
+	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	const [nodeLabel, setNodeLabel] = useState<string>('');
 
-	const [node, setNode] = useState<CreateNodeProperties>({
-		label: '',
-		modelId: 0,
-		metanodeId: 0,
-		attributes: []
-	});
+	const isCanCreateNode = selectedModel && !!nodeLabel.trim();
 
-	const isDisabledCreateButton = !node.label.trim() || !node.modelId;
+	const onCreateNode = async (payload: CreateNodePayload) => {
+		await appDispatch(createNodeAsyncThunk(payload));
+		setNodeLabel('');
+	};
 
-	function onClickSave() {
+	const onClickSave = async () => {
+		if (!selectedModel) {
+			showToast({type: 'error', message: 'Выберите модель'});
+			return;
+		}
+
 		const payload: CreateNodePayload = {
-			label: node.label,
-			modelId: node.modelId
+			label: nodeLabel,
+			modelId: selectedModel.id
 		};
 
-		if (node.metanodeId) {
-			payload.metanodeId = node.metanodeId;
-		}
+		await onCreateNode(payload);
+	};
 
-		if (node.attributes.length) {
-			payload.attributes = node.attributes;
-		}
-
-		onCreate(payload);
-	}
+	const onShowNodeCreateDialog = useCallback(
+		() => setIsDialogVisible(true),
+		[]
+	);
+	const onHideNodeCreateDialog = useCallback(
+		() => setIsDialogVisible(false),
+		[]
+	);
 
 	return (
-		<Dialog
-			header="Создать вершину"
-			visible={isVisible}
-			style={{width: '30vw'}}
-			draggable={false}
-			onHide={onHide}
-		>
-			<div className="flex flex-col gap-y-4">
-				<label htmlFor="node-label">
-					Название вершины
-					<InputText
-						className="w-full"
-						id="node-label"
-						value={node.label}
-						onChange={(e) => setNode({...node, label: e.target.value})}
-					/>
-				</label>
+		<>
+			<Button
+				label={'Создать вершину'}
+				raised
+				onClick={onShowNodeCreateDialog}
+			/>
 
-				<label htmlFor="model-node">
-					Выберите модель
-					<Dropdown
-						className="w-full"
-						optionValue="id"
-						optionLabel="name"
-						emptyMessage="Нет доступных моделей"
-						id="model-node"
-						options={modelsOptions}
-						value={node.modelId}
-						onChange={(e) => setNode({...node, modelId: e.value})}
-					/>
-				</label>
+			<Dialog
+				header="Создать вершину"
+				visible={isDialogVisible}
+				style={{width: '30vw'}}
+				draggable={false}
+				onHide={onHideNodeCreateDialog}
+			>
+				<div className="flex flex-col gap-y-4">
+					<label htmlFor="node-label">
+						Название вершины*
+						<InputText
+							className="w-full"
+							id="node-label"
+							value={nodeLabel}
+							onChange={(e) => setNodeLabel(e.target.value)}
+						/>
+					</label>
+				</div>
 
-				<label htmlFor="metanode-node">
-					Выберите метавершину
-					<Dropdown
+				<div className="mt-8 flex justify-between items-center gap-x-4">
+					<Button
 						className="w-full"
-						optionValue="id"
-						optionLabel="name"
-						emptyMessage="Нет доступных метавершин"
-						id="metanode-node"
-						options={modelsOptions}
-						value={node.metanodeId}
-						onChange={(e) => setNode({...node, metanodeId: e.value})}
+						label="Отменить"
+						severity="danger"
+						onClick={onHideNodeCreateDialog}
 					/>
-				</label>
-
-				<label htmlFor="attributes-node">
-					Выберите атрибуты
-					<MultiSelect
+					<Button
 						className="w-full"
-						optionValue="id"
-						optionLabel="name"
-						emptyMessage="Нет доступных атрибутов"
-						id="attributes-node"
-						options={modelsOptions}
-						value={node.attributes}
-						onChange={(e) => setNode({...node, attributes: e.value})}
+						label="Сохранить"
+						disabled={!isCanCreateNode}
+						onClick={onClickSave}
 					/>
-				</label>
-			</div>
-
-			<div className="mt-8 flex justify-between items-center gap-x-4">
-				<Button
-					className="w-full"
-					label="Отменить"
-					severity="danger"
-					onClick={onHide}
-				/>
-				<Button
-					className="w-full"
-					label="Сохранить"
-					disabled={isDisabledCreateButton}
-					onClick={onClickSave}
-				/>
-			</div>
-		</Dialog>
+				</div>
+			</Dialog>
+		</>
 	);
 };

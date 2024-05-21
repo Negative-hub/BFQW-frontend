@@ -1,50 +1,81 @@
 import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {InputText} from 'primereact/inputtext';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
-import {CreateModelDialogProps} from '@/components/CreateModelDialog/types.ts';
+import {CreateModelPayload} from '@/api/models';
+import {useAppDispatch} from '@/hooks/store.ts';
+import {createModelAsyncThunk} from '@/store/model/async/models.ts';
 
-export const CreateModelDialog: React.FunctionComponent<CreateModelDialogProps> = (props: CreateModelDialogProps) => {
-	const {
-		isVisible,
-		onHide,
-		onCreate
-	} = props;
+export const CreateModelDialog: React.FunctionComponent = () => {
+	const appDispatch = useAppDispatch();
 
-	const [name, setName] = useState('');
+	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	const [modelName, setModelName] = useState('');
+
+	const isCanSaveModel = !!modelName.trim().length;
+
+	const onCreateModel = async (payload: CreateModelPayload) => {
+		await appDispatch(createModelAsyncThunk(payload));
+		setModelName('');
+	};
+
+	const onClickSaveHandler = async () => {
+		await onCreateModel({name: modelName, userId: 1});
+	};
+
+	const onShowModelCreateDialog = useCallback(
+		() => {
+			setModelName('');
+			setIsDialogVisible(true);
+		},
+		[]
+	);
+
+	const onHideModelCreateDialog = useCallback(
+		() => setIsDialogVisible(false),
+		[]
+	);
 
 	return (
-		<Dialog
-			header="Создать модель"
-			visible={isVisible}
-			style={{width: '30vw'}}
-			draggable={false}
-			onHide={onHide}
-		>
-			<label htmlFor="model-label">
-				Название модели
-			</label>
-			<InputText
-				className="w-full"
-				id="model-label"
-				value={name}
-				onChange={(e) => setName(e.target.value)}
+		<>
+			<Button
+				label={'Создать модель'}
+				raised
+				onClick={onShowModelCreateDialog}
 			/>
-			<div className="mt-8 flex justify-between items-center gap-x-4">
-				<Button
+
+			<Dialog
+				header="Создать модель"
+				visible={isDialogVisible}
+				style={{width: '30vw'}}
+				draggable={false}
+				onHide={onHideModelCreateDialog}
+			>
+				<label htmlFor="model-label">
+					Название модели*
+				</label>
+				<InputText
 					className="w-full"
-					label="Отменить"
-					severity="danger"
-					onClick={onHide}
+					id="model-label"
+					value={modelName}
+					onChange={(e) => setModelName(e.target.value)}
 				/>
-				<Button
-					className="w-full"
-					label="Сохранить"
-					disabled={!name.trim().length}
-					onClick={() => onCreate({name, userId: 1})}
-				/>
-			</div>
-		</Dialog>
+				<div className="mt-8 flex justify-between items-center gap-x-4">
+					<Button
+						className="w-full"
+						label="Отменить"
+						severity="danger"
+						onClick={onHideModelCreateDialog}
+					/>
+					<Button
+						className="w-full"
+						label="Сохранить"
+						disabled={!isCanSaveModel}
+						onClick={onClickSaveHandler}
+					/>
+				</div>
+			</Dialog>
+		</>
 	);
 };

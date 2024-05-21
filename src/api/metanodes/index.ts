@@ -1,22 +1,22 @@
 import {instance} from '@/api/instance.ts';
-import {Option} from '@/types/general.ts';
+import {MetagraphNode, Option} from '@/types/general.ts';
 
-export interface GetMetanodesByModelParams {
+export interface getMetanodesParams {
 	modelId: number;
 }
 
-async function getMetanodesByModel(params: GetMetanodesByModelParams): Promise<Option[]> {
+async function getMetanodes(params: getMetanodesParams): Promise<Option[]> {
 	const {data} = await instance.get<Option[]>(`/models/${params.modelId}/metanodes`);
 	return data;
 }
 
 export interface CreateMetanodePayload {
 	label: string;
-	attributes?: number[];
+	nodes: number[];
 }
 
-async function postMetanode(payload: CreateMetanodePayload): Promise<Option> {
-	const {data} = await instance.post<Option>('/metanodes', payload);
+async function postMetanode(payload: CreateMetanodePayload): Promise<MetagraphNode[]> {
+	const {data} = await instance.post<MetagraphNode[]>('/metanodes', payload);
 	return data;
 }
 
@@ -36,7 +36,7 @@ async function deleteMetanode(id: number): Promise<void> {
 }
 
 export default {
-	getMetanodesByModel,
+	getMetanodes,
 	postMetanode,
 	updateMetanode,
 	deleteMetanode
