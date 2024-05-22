@@ -6,8 +6,8 @@ import showToast from '@/utils/showToast.ts';
 
 export const fetchModelsAsyncThunk = createAsyncThunk(
 	'models/fetchModels',
-	async (params: {userId: number}): Promise<Option[]> => {
-		return modelsApi.getUserModels(params.userId);
+	async (): Promise<Option[]> => {
+		return modelsApi.getModels();
 	}
 );
 

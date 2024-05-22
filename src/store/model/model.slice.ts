@@ -24,6 +24,7 @@ const modelSlice = createSlice({
 	extraReducers: (builder) => {
 		builder.addCase(fetchModelsAsyncThunk.fulfilled, (state, action) => {
 			state.models = action.payload;
+			state.selectedModel = state.models[0] ? state.models[0] : null;
 		});
 
 		builder.addCase(createModelAsyncThunk.fulfilled, (state, action) => {

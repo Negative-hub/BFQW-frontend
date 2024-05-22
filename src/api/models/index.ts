@@ -1,14 +1,14 @@
 import {instance} from '@/api/instance.ts';
 import {Option} from '@/types/general.ts';
 
-async function getUserModels(userId: number): Promise<Option[]> {
-	const {data} = await instance.get<Option[]>(`/users/${userId}/models`);
+async function getModels(): Promise<Option[]> {
+	const {data} = await instance.get<Option[]>('/models');
 	return data;
 }
 
 export interface CreateModelPayload {
 	name: string;
-	userId: number;
+	// userId: number;
 }
 
 async function postModel(payload: CreateModelPayload): Promise<Option> {
@@ -22,6 +22,6 @@ async function deleteModel(id: number): Promise<void> {
 
 export default {
 	deleteModel,
-	getUserModels,
+	getModels,
 	postModel
 };
