@@ -1,8 +1,17 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 import {createAttributeAsyncThunk, getAttributesAsyncThunk} from '@/store/metagraph/async/attributes.ts';
-import {createEdgesAsyncThunk, getEdgesAsyncThunk} from '@/store/metagraph/async/edges.ts';
-import {createMetanodeAsyncThunk, getMetanodesAsyncThunk} from '@/store/metagraph/async/metanodes.ts';
+import {
+	createEdgeAsyncThunk,
+	deleteEdgeAsyncThunk,
+	getEdgesAsyncThunk,
+	updateEdgeAsyncThunk
+} from '@/store/metagraph/async/edges.ts';
+import {
+	createMetanodeAsyncThunk,
+	getMetanodesAsyncThunk,
+	updateMetanodeAsyncThunk
+} from '@/store/metagraph/async/metanodes.ts';
 import {
 	createNodeAsyncThunk,
 	deleteNodeAsyncThunk,
@@ -28,9 +37,7 @@ const initialState: Metagraph = {
 const metagraphSlice = createSlice({
 	name: 'metagraph',
 	initialState,
-	reducers: {
-		// standard reducer logic, with auto-generated action types per reducer
-	},
+	reducers: {},
 	extraReducers: (builder) => {
 		builder.addCase(getNodesAsyncThunk.fulfilled, (state, action) => {
 			state.nodes = action.payload;
@@ -58,6 +65,12 @@ const metagraphSlice = createSlice({
 			}
 		});
 
+		builder.addCase(updateMetanodeAsyncThunk.fulfilled, (state, action) => {
+			for (const node of action.payload) {
+				state.nodes = state.nodes.map((n) => n.id === node.id ? node : n);
+			}
+		});
+
 		builder.addCase(getAttributesAsyncThunk.fulfilled, (state, action) => {
 			state.attributes = action.payload;
 		});
@@ -70,8 +83,16 @@ const metagraphSlice = createSlice({
 			state.edges = action.payload;
 		});
 
-		builder.addCase(createEdgesAsyncThunk.fulfilled, (state, action) => {
+		builder.addCase(createEdgeAsyncThunk.fulfilled, (state, action) => {
 			state.edges.push(action.payload);
+		});
+
+		builder.addCase(updateEdgeAsyncThunk.fulfilled, (state, action) => {
+			state.edges = state.edges.map((edge) => edge.id === action.payload.id ? action.payload : edge);
+		});
+
+		builder.addCase(deleteEdgeAsyncThunk.fulfilled, (state, action) => {
+			state.edges = state.edges.filter((edge) => +edge.id !== action.payload);
 		});
 	}
 });

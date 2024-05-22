@@ -1,20 +1,20 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-import metanodeApi, {CreateMetanodePayload, getMetanodesParams, UpdateMetanodePayload} from '@/api/metanodes';
+import metanodeApi, {CreateMetanodePayload, GetMetanodesParams, UpdateMetanodePayload} from '@/api/metanodes';
 import {MetagraphNode, Option} from '@/types/general.ts';
 import showToast from '@/utils/showToast.ts';
 
 export const getMetanodesAsyncThunk = createAsyncThunk(
 	'metanodes/getMetanodes',
-	async (params: getMetanodesParams): Promise<Option[]> => {
+	async (params: GetMetanodesParams): Promise<Option[]> => {
 		return metanodeApi.getMetanodes(params);
 	}
 );
 
 export const createMetanodeAsyncThunk = createAsyncThunk(
 	'metanodes/createMetanode',
-	async (payload: CreateMetanodePayload): Promise<MetagraphNode[]> => {
-		const nodes = await metanodeApi.postMetanode(payload);
+	async (params: CreateMetanodePayload): Promise<MetagraphNode[]> => {
+		const nodes = await metanodeApi.postMetanode(params);
 		showToast({type: 'success', message: 'Метавершина успешно создана'});
 
 		return nodes;
@@ -23,7 +23,7 @@ export const createMetanodeAsyncThunk = createAsyncThunk(
 
 export const updateMetanodeAsyncThunk = createAsyncThunk(
 	'metanodes/updateMetanode',
-	async (payload: UpdateMetanodePayload): Promise<Option> => {
+	async (payload: UpdateMetanodePayload): Promise<MetagraphNode[]> => {
 		const metanode = await metanodeApi.updateMetanode(payload);
 		showToast({type: 'success', message: 'Метавершина успешно обновлена'});
 

@@ -1,16 +1,16 @@
 import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {InputText} from 'primereact/inputtext';
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 
 import {CreateModelPayload} from '@/api/models';
-import {useAppDispatch} from '@/hooks/store.ts';
+import {useDialog} from '@/hooks/useDialog.ts';
+import {useStore} from '@/hooks/useStore.ts';
 import {createModelAsyncThunk} from '@/store/model/async/models.ts';
 
 export const CreateModelDialog: React.FunctionComponent = () => {
-	const appDispatch = useAppDispatch();
-
-	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	const {appDispatch} = useStore();
+	const {isVisible, openDialog, closeDialog} = useDialog();
 	const [modelName, setModelName] = useState('');
 
 	const isCanSaveModel = !!modelName.trim().length;
@@ -21,43 +21,29 @@ export const CreateModelDialog: React.FunctionComponent = () => {
 	};
 
 	const onClickSaveHandler = async () => {
-		await onCreateModel({name: modelName, userId: 1});
+		await onCreateModel({name: modelName});
 	};
-
-	const onShowModelCreateDialog = useCallback(
-		() => {
-			setModelName('');
-			setIsDialogVisible(true);
-		},
-		[]
-	);
-
-	const onHideModelCreateDialog = useCallback(
-		() => setIsDialogVisible(false),
-		[]
-	);
 
 	return (
 		<>
 			<Button
 				label={'Создать модель'}
 				raised
-				onClick={onShowModelCreateDialog}
+				onClick={openDialog}
 			/>
 
 			<Dialog
 				header="Создать модель"
-				visible={isDialogVisible}
+				visible={isVisible}
 				style={{width: '30vw'}}
 				draggable={false}
-				onHide={onHideModelCreateDialog}
+				onHide={closeDialog}
 			>
-				<label htmlFor="model-label">
+				<label>
 					Название модели*
 				</label>
 				<InputText
 					className="w-full"
-					id="model-label"
 					value={modelName}
 					onChange={(e) => setModelName(e.target.value)}
 				/>
@@ -66,7 +52,7 @@ export const CreateModelDialog: React.FunctionComponent = () => {
 						className="w-full"
 						label="Отменить"
 						severity="danger"
-						onClick={onHideModelCreateDialog}
+						onClick={closeDialog}
 					/>
 					<Button
 						className="w-full"

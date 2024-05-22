@@ -1,19 +1,20 @@
 import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {InputText} from 'primereact/inputtext';
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 
 import {CreateNodePayload} from '@/api/nodes';
-import {useAppDispatch, useAppSelector} from '@/hooks/store.ts';
+import {useDialog} from '@/hooks/useDialog.ts';
+import {useStore} from '@/hooks/useStore.ts';
 import {createNodeAsyncThunk} from '@/store/metagraph/async/nodes.ts';
 import showToast from '@/utils/showToast.ts';
 
 export const CreateNodeDialog: React.FunctionComponent = () => {
-	const appDispatch = useAppDispatch();
-	const selectedModel = useAppSelector((s) => s.models.selectedModel);
-
-	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	const {appDispatch, appSelector} = useStore();
+	const {isVisible, openDialog, closeDialog} = useDialog();
 	const [nodeLabel, setNodeLabel] = useState<string>('');
+
+	const selectedModel = appSelector((state) => state.models.selectedModel);
 
 	const isCanCreateNode = selectedModel && !!nodeLabel.trim();
 
@@ -36,36 +37,26 @@ export const CreateNodeDialog: React.FunctionComponent = () => {
 		await onCreateNode(payload);
 	};
 
-	const onShowNodeCreateDialog = useCallback(
-		() => setIsDialogVisible(true),
-		[]
-	);
-	const onHideNodeCreateDialog = useCallback(
-		() => setIsDialogVisible(false),
-		[]
-	);
-
 	return (
 		<>
 			<Button
 				label={'Создать вершину'}
 				raised
-				onClick={onShowNodeCreateDialog}
+				onClick={openDialog}
 			/>
 
 			<Dialog
 				header="Создать вершину"
-				visible={isDialogVisible}
+				visible={isVisible}
 				style={{width: '30vw'}}
 				draggable={false}
-				onHide={onHideNodeCreateDialog}
+				onHide={closeDialog}
 			>
 				<div className="flex flex-col gap-y-4">
-					<label htmlFor="node-label">
+					<label>
 						Название вершины*
 						<InputText
 							className="w-full"
-							id="node-label"
 							value={nodeLabel}
 							onChange={(e) => setNodeLabel(e.target.value)}
 						/>
@@ -77,7 +68,7 @@ export const CreateNodeDialog: React.FunctionComponent = () => {
 						className="w-full"
 						label="Отменить"
 						severity="danger"
-						onClick={onHideNodeCreateDialog}
+						onClick={closeDialog}
 					/>
 					<Button
 						className="w-full"

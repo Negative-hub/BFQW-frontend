@@ -10,6 +10,15 @@ async function getEdges(params: GetEdgesParams): Promise<MetagraphEdge[]> {
 	return data;
 }
 
+export interface GetNodeByIdParams {
+	edgeId: string;
+}
+
+async function getEdgeById(params: GetNodeByIdParams): Promise<MetagraphEdge> {
+	const {data} = await instance.get<MetagraphEdge>(`/edges/${params.edgeId}`);
+	return data;
+}
+
 export interface CreateEdgePayload {
 	label: string;
 	sourceId: number;
@@ -39,6 +48,7 @@ async function deleteEdge(id: number): Promise<void> {
 
 export default {
 	getEdges,
+	getEdgeById,
 	postEdge,
 	updateEdge,
 	deleteEdge

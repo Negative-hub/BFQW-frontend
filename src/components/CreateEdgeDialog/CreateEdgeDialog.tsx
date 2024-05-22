@@ -2,36 +2,38 @@ import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {Dropdown} from 'primereact/dropdown';
 import {InputText} from 'primereact/inputtext';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {CreateEdgePayload} from '@/api/edges';
 import {CreateEdgeState} from '@/components/CreateEdgeDialog/types.ts';
-import {useAppDispatch, useAppSelector} from '@/hooks/store.ts';
-import {createEdgesAsyncThunk} from '@/store/metagraph/async/edges.ts';
+import {useDialog} from '@/hooks/useDialog.ts';
+import {useStore} from '@/hooks/useStore.ts';
+import {createEdgeAsyncThunk} from '@/store/metagraph/async/edges.ts';
 import {getNodesAsyncThunk} from '@/store/metagraph/async/nodes.ts';
 import showToast from '@/utils/showToast.ts';
 
 export const CreateEdgeDialog: React.FunctionComponent = () => {
-	const appDispatch = useAppDispatch();
-	const selectedModel = useAppSelector((s) => s.models.selectedModel);
-	const metagraphNodes = useAppSelector((s) => s.metagraph.nodes);
-
-	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	const {appDispatch, appSelector} = useStore();
+	const {isVisible, openDialog, closeDialog} = useDialog();
 	const [
 		metagraphEdge,
 		setMetagraphEdge
 	] = useState<CreateEdgeState>({label: '', sourceId: 0, targetId: 0});
 
-	useEffect(() => {
-		if (isDialogVisible && selectedModel) {
-			appDispatch(getNodesAsyncThunk({modelId: selectedModel.id}));
-		}
-	}, [appDispatch, isDialogVisible, selectedModel]);
+	const selectedModel = appSelector((state) => state.models.selectedModel);
+	const metagraphNodes = appSelector((state) => state.metagraph.nodes);
 
 	const isCanCreateNode = metagraphEdge.label.trim() && metagraphEdge.sourceId && metagraphEdge.targetId;
 
+	useEffect(() => {
+		if (isVisible && selectedModel) {
+			appDispatch(getNodesAsyncThunk({modelId: selectedModel.id}));
+		}
+	}, [appDispatch, isVisible, selectedModel]);
+
+
 	const onCreateEdge = async (payload: CreateEdgePayload) => {
-		await appDispatch(createEdgesAsyncThunk(payload));
+		await appDispatch(createEdgeAsyncThunk(payload));
 	};
 
 	const onClickSave = async () => {
@@ -49,47 +51,35 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 		await onCreateEdge(payload);
 	};
 
-	const onShowEdgeCreateDialog = useCallback(
-		() => setIsDialogVisible(true),
-		[]
-	);
-
-	const onHideEdgeCreateDialog = useCallback(
-		() => setIsDialogVisible(false),
-		[]
-	);
-
 	return (
 		<>
 			<Button
 				label={'Создать ребро'}
 				raised
-				onClick={onShowEdgeCreateDialog}
+				onClick={openDialog}
 			/>
 
 			<Dialog
 				header="Создать ребро"
-				visible={isDialogVisible}
+				visible={isVisible}
 				style={{width: '30vw'}}
 				draggable={false}
-				onHide={onHideEdgeCreateDialog}
+				onHide={closeDialog}
 			>
 				<div className="flex flex-col gap-y-4">
-					<label htmlFor="edge-label">
+					<label>
 						Название ребра*
 						<InputText
 							className="w-full"
-							id="edge-label"
 							value={metagraphEdge.label}
 							onChange={(e) => setMetagraphEdge({...metagraphEdge, label: e.target.value})}
 						/>
 					</label>
 
-					<label htmlFor="edge-source">
+					<label>
 						Выберите источник*
 						<Dropdown
 							className="w-full"
-							id="edge-source"
 							options={metagraphNodes}
 							value={metagraphEdge.sourceId}
 							optionLabel="label"
@@ -98,11 +88,10 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 						/>
 					</label>
 
-					<label htmlFor="edge-target">
+					<label>
 						Выберите цель*
 						<Dropdown
 							className="w-full"
-							id="edge-target"
 							options={metagraphNodes}
 							value={metagraphEdge.targetId}
 							optionLabel="label"
@@ -117,7 +106,7 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 						className="w-full"
 						label="Отменить"
 						severity="danger"
-						onClick={onHideEdgeCreateDialog}
+						onClick={closeDialog}
 					/>
 					<Button
 						className="w-full"

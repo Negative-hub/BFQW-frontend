@@ -7,7 +7,7 @@ import React, {useEffect, useState} from 'react';
 
 import nodesApi, {UpdateNodePayload} from '@/api/nodes';
 import {UpdateNodeDialogProps} from '@/components/UpdateNodeDialog/types.ts';
-import {useAppDispatch, useAppSelector} from '@/hooks/store.ts';
+import {useStore} from '@/hooks/useStore.ts';
 import {getAttributesAsyncThunk} from '@/store/metagraph/async/attributes.ts';
 import {getMetanodesAsyncThunk} from '@/store/metagraph/async/metanodes.ts';
 import {deleteNodeAsyncThunk, updateNodeAsyncThunk} from '@/store/metagraph/async/nodes.ts';
@@ -15,10 +15,10 @@ import {UpdatedNode} from '@/types/node.ts';
 import showToast from '@/utils/showToast.ts';
 
 export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = (props: UpdateNodeDialogProps) => {
-	const appDispatch = useAppDispatch();
-	const selectedModel = useAppSelector((s) => s.models.selectedModel);
-	const attributesOptions = useAppSelector((s) => s.metagraph.attributes);
-	const metanodesOptions = useAppSelector((s) => s.metagraph.metanodes);
+	const {appSelector, appDispatch} = useStore();
+	const selectedModel = appSelector((state) => state.models.selectedModel);
+	const attributesOptions = appSelector((state) => state.metagraph.attributes);
+	const metanodesOptions = appSelector((state) => state.metagraph.metanodes);
 
 	const [
 		node,
@@ -31,11 +31,7 @@ export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = 
 	});
 
 	useEffect(() => {
-		if (!selectedModel) {
-			return;
-		}
-
-		if (!props.nodeId) {
+		if (!selectedModel || !props.isVisible) {
 			return;
 		}
 
@@ -92,21 +88,19 @@ export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = 
 				onHide={props.onClose}
 			>
 				<div className="flex flex-col gap-y-4">
-					<label htmlFor="updated-node-label">
+					<label>
 						Название вершины*
 						<InputText
 							className="w-full"
-							id="updated-node-label"
 							value={node.label}
 							onChange={(e) => setNode({...node, label: e.target.value})}
 						/>
 					</label>
 
-					<label htmlFor="updated-node-attributes">
+					<label>
 						Аттрибуты вершины
 						<MultiSelect
 							className="w-full"
-							id="updated-node-attributes"
 							value={node.attributeIds}
 							options={attributesOptions}
 							optionLabel="label"
@@ -115,11 +109,10 @@ export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = 
 						/>
 					</label>
 
-					<label htmlFor="updated-node-metanode">
+					<label>
 						Метавершина
 						<Dropdown
 							className="w-full"
-							id="updated-node-metanode"
 							value={node.metanodeId}
 							options={metanodesOptions}
 							optionLabel="name"

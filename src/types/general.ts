@@ -20,7 +20,7 @@ export interface MetagraphNode extends GraphNode {
 
 export interface MetagraphEdge extends GraphEdge {
 	id: string;
+	label: string;
 	source: string;
 	target: string;
-	label: string;
 }

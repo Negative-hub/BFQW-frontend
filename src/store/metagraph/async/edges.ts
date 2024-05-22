@@ -14,8 +14,8 @@ export const getEdgesAsyncThunk = createAsyncThunk(
 		}
 	}
 );
-export const createEdgesAsyncThunk = createAsyncThunk(
-	'edges/createEdges',
+export const createEdgeAsyncThunk = createAsyncThunk(
+	'edges/createEdge',
 	async (payload: CreateEdgePayload): Promise<MetagraphEdge> => {
 		const node = await edgesApi.postEdge(payload);
 		showToast({type: 'success', message: 'Ребро успешно создано'});
@@ -24,8 +24,8 @@ export const createEdgesAsyncThunk = createAsyncThunk(
 	}
 );
 
-export const updateEdgesAsyncThunk = createAsyncThunk(
-	'edges/updateEdges',
+export const updateEdgeAsyncThunk = createAsyncThunk(
+	'edges/updateEdge',
 	async (payload: UpdateEdgePayload): Promise<MetagraphEdge> => {
 		const node = await edgesApi.updateEdge(payload);
 		showToast({type: 'success', message: 'Ребро успешно изменено'});
@@ -34,12 +34,12 @@ export const updateEdgesAsyncThunk = createAsyncThunk(
 	}
 );
 
-export const deleteEdgesAsyncThunk = createAsyncThunk(
-	'edges/deleteEdges',
-	async (params: {nodeId: number}): Promise<number> => {
-		await edgesApi.deleteEdge(params.nodeId);
+export const deleteEdgeAsyncThunk = createAsyncThunk(
+	'edges/deleteEdge',
+	async (params: {edgeId: number}): Promise<number> => {
+		await edgesApi.deleteEdge(params.edgeId);
 		showToast({type: 'success', message: 'Ребро успешно удалено'});
 
-		return params.nodeId;
+		return params.edgeId;
 	}
 );

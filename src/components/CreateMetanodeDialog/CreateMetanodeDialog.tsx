@@ -2,31 +2,31 @@ import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {InputText} from 'primereact/inputtext';
 import {MultiSelect} from 'primereact/multiselect';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {CreateMetanodePayload} from '@/api/metanodes';
 import {CreateMetanodeState} from '@/components/CreateMetanodeDialog/types.ts';
-import {useAppDispatch, useAppSelector} from '@/hooks/store.ts';
+import {useDialog} from '@/hooks/useDialog.ts';
+import {useStore} from '@/hooks/useStore.ts';
 import {createMetanodeAsyncThunk} from '@/store/metagraph/async/metanodes.ts';
 import {getNodesAsyncThunk} from '@/store/metagraph/async/nodes.ts';
 import showToast from '@/utils/showToast.ts';
 
 export const CreateMetanodeDialog: React.FunctionComponent = () => {
-	const appDispatch = useAppDispatch();
-
-	const selectedModel = useAppSelector((s) => s.models.selectedModel);
-	const metagraphNodes = useAppSelector((s) => s.metagraph.nodes);
-
-	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	const {appSelector, appDispatch} = useStore();
+	const {isVisible, openDialog, closeDialog} = useDialog();
 	const [metanode, setMetanode] = useState<CreateMetanodeState>({label: '', nodes: []});
 
-	useEffect(() => {
-		if (isDialogVisible && selectedModel) {
-			appDispatch(getNodesAsyncThunk({modelId: selectedModel.id}));
-		}
-	}, [appDispatch, isDialogVisible, selectedModel]);
+	const selectedModel = appSelector((state) => state.models.selectedModel);
+	const metagraphNodes = appSelector((state) => state.metagraph.nodes);
 
 	const isCanCreateMetanode = selectedModel && !!metanode.label.trim() && !!metanode.nodes.length;
+
+	useEffect(() => {
+		if (isVisible && selectedModel) {
+			appDispatch(getNodesAsyncThunk({modelId: selectedModel.id}));
+		}
+	}, [appDispatch, isVisible, selectedModel]);
 
 	const onCreateMetanode = async (payload: CreateMetanodePayload) => {
 		await appDispatch(createMetanodeAsyncThunk(payload));
@@ -46,48 +46,36 @@ export const CreateMetanodeDialog: React.FunctionComponent = () => {
 		await onCreateMetanode(payload);
 	};
 
-	const onShowMetanodeCreateDialog = useCallback(
-		() => setIsDialogVisible(true),
-		[]
-	);
-
-	const onHideMetanodeCreateDialog = useCallback(
-		() => setIsDialogVisible(false),
-		[]
-	);
-
 	return (
 		<>
 			<Button
 				label={'Создать метавершину'}
 				raised
-				onClick={onShowMetanodeCreateDialog}
+				onClick={openDialog}
 			/>
 			<Dialog
 				header="Создать метавершину"
-				visible={isDialogVisible}
+				visible={isVisible}
 				style={{width: '30vw'}}
 				draggable={false}
-				onHide={onHideMetanodeCreateDialog}
+				onHide={closeDialog}
 			>
 				<div className="flex flex-col gap-y-4">
-					<label htmlFor="metanode-label">
+					<label>
 						Название метавершины*
 						<InputText
 							className="w-full"
-							id="metanode-label"
 							value={metanode.label}
 							onChange={(e) => setMetanode({...metanode, label: e.target.value})}
 						/>
 					</label>
 
-					<label htmlFor="metanode-nodes">
+					<label>
 						Выберите вершины
 						<MultiSelect
 							className="w-full"
 							value={metanode.nodes}
 							options={metagraphNodes}
-							id="metanode-nodes"
 							optionLabel="label"
 							optionValue="id"
 							onChange={(e) => setMetanode({...metanode, nodes: e.value})}
@@ -100,7 +88,7 @@ export const CreateMetanodeDialog: React.FunctionComponent = () => {
 						className="w-full"
 						label="Отменить"
 						severity="danger"
-						onClick={onHideMetanodeCreateDialog}
+						onClick={closeDialog}
 					/>
 					<Button
 						className="w-full"

@@ -8,7 +8,7 @@ import {CreateMetanodeDialog} from '@/components/CreateMetanodeDialog';
 import {CreateModelDialog} from '@/components/CreateModelDialog';
 import {CreateNodeDialog} from '@/components/CreateNodeDialog';
 import {Metagraph} from '@/components/Metagraph/Metagraph.tsx';
-import {useAppDispatch, useAppSelector} from '@/hooks/store.ts';
+import {useStore} from '@/hooks/useStore.ts';
 import {getEdgesAsyncThunk} from '@/store/metagraph/async/edges.ts';
 import {getNodesAsyncThunk} from '@/store/metagraph/async/nodes.ts';
 import {fetchModelsAsyncThunk} from '@/store/model/async/models.ts';
@@ -16,13 +16,13 @@ import {setSelectedModel} from '@/store/model/model.slice.ts';
 
 
 export const App: React.FunctionComponent = () => {
-	const appDispatch = useAppDispatch();
+	const {appDispatch, appSelector} = useStore();
 
-	const modelsOptions = useAppSelector((s) => s.models.models);
-	const selectedModel = useAppSelector((s) => s.models.selectedModel);
+	const modelsOptions = appSelector((state) => state.models.models);
+	const selectedModel = appSelector((state) => state.models.selectedModel);
 
 	useEffect(() => {
-		appDispatch(fetchModelsAsyncThunk({userId: 1}));
+		appDispatch(fetchModelsAsyncThunk());
 	}, [appDispatch]);
 
 	useEffect(() => {
