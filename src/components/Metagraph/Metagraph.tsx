@@ -123,6 +123,7 @@ export const Metagraph: React.FunctionComponent = () => {
 			<div className="h-full relative left-0 bottom-0">
 				{
 					!!selectedModel &&
+					!!metagraphNodes.length &&
 					<GraphCanvas
 						ref={graphCanvasRef}
 						nodes={metagraphNodes}

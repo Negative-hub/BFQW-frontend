@@ -29,6 +29,7 @@ const modelSlice = createSlice({
 
 		builder.addCase(createModelAsyncThunk.fulfilled, (state, action) => {
 			state.models.push(action.payload);
+			state.selectedModel = action.payload;
 		});
 
 		builder.addCase(deleteModelAsyncThunk.fulfilled, (state, action) => {

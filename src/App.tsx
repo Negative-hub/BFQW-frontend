@@ -7,13 +7,12 @@ import {CreateEdgeDialog} from '@/components/CreateEdgeDialog/CreateEdgeDialog.t
 import {CreateMetanodeDialog} from '@/components/CreateMetanodeDialog';
 import {CreateModelDialog} from '@/components/CreateModelDialog';
 import {CreateNodeDialog} from '@/components/CreateNodeDialog';
-import {Metagraph} from '@/components/Metagraph/Metagraph.tsx';
+import {Metagraph} from '@/components/Metagraph';
 import {useStore} from '@/hooks/useStore.ts';
 import {getEdgesAsyncThunk} from '@/store/metagraph/async/edges.ts';
 import {getNodesAsyncThunk} from '@/store/metagraph/async/nodes.ts';
 import {fetchModelsAsyncThunk} from '@/store/model/async/models.ts';
 import {setSelectedModel} from '@/store/model/model.slice.ts';
-
 
 export const App: React.FunctionComponent = () => {
 	const {appDispatch, appSelector} = useStore();

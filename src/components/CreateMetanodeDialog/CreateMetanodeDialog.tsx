@@ -30,6 +30,7 @@ export const CreateMetanodeDialog: React.FunctionComponent = () => {
 
 	const onCreateMetanode = async (payload: CreateMetanodePayload) => {
 		await appDispatch(createMetanodeAsyncThunk(payload));
+		closeDialog();
 	};
 
 	const onClickSave = async () => {

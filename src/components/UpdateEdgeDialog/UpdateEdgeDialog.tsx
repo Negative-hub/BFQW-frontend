@@ -43,6 +43,7 @@ export const UpdateEdgeDialog: React.FunctionComponent<UpdateEdgeProps> = (props
 
 	const onUpdateEdge = async (payload: UpdateEdgePayload) => {
 		await appDispatch(updateEdgeAsyncThunk(payload));
+		props.onClose();
 	};
 
 	const onClickSave = async () => {

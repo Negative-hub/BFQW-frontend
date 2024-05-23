@@ -36,6 +36,7 @@ export const CreateAttributeDialog: React.FunctionComponent = () => {
 
 	const onCreateAttribute = async (payload: CreateAttributePayload) => {
 		await appDispatch(createAttributeAsyncThunk(payload));
+		closeDialog();
 	};
 
 	const onClickSave = async () => {

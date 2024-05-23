@@ -34,6 +34,7 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 
 	const onCreateEdge = async (payload: CreateEdgePayload) => {
 		await appDispatch(createEdgeAsyncThunk(payload));
+		closeDialog();
 	};
 
 	const onClickSave = async () => {

@@ -17,7 +17,7 @@ export const CreateModelDialog: React.FunctionComponent = () => {
 
 	const onCreateModel = async (payload: CreateModelPayload) => {
 		await appDispatch(createModelAsyncThunk(payload));
-		setModelName('');
+		closeDialog();
 	};
 
 	const onClickSaveHandler = async () => {

@@ -20,7 +20,7 @@ export const CreateNodeDialog: React.FunctionComponent = () => {
 
 	const onCreateNode = async (payload: CreateNodePayload) => {
 		await appDispatch(createNodeAsyncThunk(payload));
-		setNodeLabel('');
+		closeDialog();
 	};
 
 	const onClickSave = async () => {
