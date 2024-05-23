@@ -1,6 +1,6 @@
 import {Button} from 'primereact/button';
-import React, {useState} from 'react';
-import {ClusterEventArgs, GraphCanvas, InternalGraphEdge, InternalGraphNode} from 'reagraph';
+import React, {useRef, useState} from 'react';
+import {ClusterEventArgs, GraphCanvas, GraphCanvasRef, InternalGraphEdge, InternalGraphNode} from 'reagraph';
 
 import Font from '@/assets/font/Anonymous.ttf';
 import {UpdateEdgeDialog} from '@/components/UpdateEdgeDialog';
@@ -19,6 +19,8 @@ export const Metagraph: React.FunctionComponent = () => {
 	const [selectedNodeId, setSelectedNodeId] = useState<string>('');
 	const [selectedEdgeId, setSelectedEdgeId] = useState<string>('');
 	const [selectedCluster, setSelectedCluster] = useState<number[]>([]);
+
+	const graphCanvasRef = useRef<GraphCanvasRef | null>(null);
 
 	const {
 		isVisible: isVisibleUpdateNodeDialog,
@@ -69,6 +71,21 @@ export const Metagraph: React.FunctionComponent = () => {
 		closeUpdateMetanodeDialog();
 	};
 
+	const onClickExportMetagraph = () => {
+		if (!graphCanvasRef.current) {
+			return;
+		}
+
+		const metagraphData = graphCanvasRef.current.exportCanvas();
+
+		const link = document.createElement('a');
+		link.setAttribute('href', metagraphData);
+		link.setAttribute('target', '_blank');
+		link.setAttribute('download', 'graph.png');
+		link.click();
+		link.remove();
+	};
+
 	const onClickDeleteMetagraph = () => {
 		if (!selectedModel) {
 			return;
@@ -85,19 +102,29 @@ export const Metagraph: React.FunctionComponent = () => {
 				</h2>
 				{
 					!!selectedModel &&
-					<Button
-						className="text-sm"
-						label="Удалить модель"
-						severity="danger"
-						size="small"
-						onClick={onClickDeleteMetagraph}
-					/>
+					<div className="flex gap-x-2 items-center">
+						<Button
+							className="text-sm"
+							label="Экспортировать модель"
+							severity="info"
+							size="small"
+							onClick={onClickExportMetagraph}
+						/>
+						<Button
+							className="text-sm"
+							label="Удалить модель"
+							severity="danger"
+							size="small"
+							onClick={onClickDeleteMetagraph}
+						/>
+					</div>
 				}
 			</div>
 			<div className="h-full relative left-0 bottom-0">
 				{
 					!!selectedModel &&
 					<GraphCanvas
+						ref={graphCanvasRef}
 						nodes={metagraphNodes}
 						edges={metagraphEdges}
 						draggable={true}
