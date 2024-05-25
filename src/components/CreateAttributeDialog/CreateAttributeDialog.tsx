@@ -92,6 +92,7 @@ export const CreateAttributeDialog: React.FunctionComponent = () => {
 							options={metagraphNodes}
 							optionLabel="label"
 							optionValue="id"
+							emptyMessage="Нет доступных вершин"
 							onChange={(e) => setAttribute({...attribute, nodeId: e.value})}
 						/>
 					</label>
@@ -104,6 +105,7 @@ export const CreateAttributeDialog: React.FunctionComponent = () => {
 							options={metagraphMetanodes}
 							optionLabel="name"
 							optionValue="id"
+							emptyMessage="Нет доступных метавершин"
 							onChange={(e) => setAttribute({...attribute, metanodeId: e.value})}
 						/>
 					</label>

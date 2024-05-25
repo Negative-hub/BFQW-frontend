@@ -97,18 +97,6 @@ export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = 
 				</label>
 
 				<label>
-					Аттрибуты вершины
-					<MultiSelect
-						className="w-full"
-						value={node.attributeIds}
-						options={attributesOptions}
-						optionLabel="label"
-						optionValue="id"
-						onChange={(e) => setNode({...node, attributeIds: e.value})}
-					/>
-				</label>
-
-				<label>
 					Метавершина
 					<Dropdown
 						className="w-full"
@@ -116,7 +104,21 @@ export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = 
 						options={metanodesOptions}
 						optionLabel="name"
 						optionValue="id"
+						emptyMessage="Нет доступных метавершин"
 						onChange={(e) => setNode({...node, metanodeId: e.value})}
+					/>
+				</label>
+
+				<label>
+					Аттрибуты вершины
+					<MultiSelect
+						className="w-full"
+						value={node.attributeIds}
+						options={attributesOptions}
+						optionLabel="label"
+						optionValue="id"
+						emptyMessage="Нет доступных атрибутов"
+						onChange={(e) => setNode({...node, attributeIds: e.value})}
 					/>
 				</label>
 			</div>

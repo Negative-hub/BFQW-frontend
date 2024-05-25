@@ -53,16 +53,14 @@ export const CreateNodeDialog: React.FunctionComponent = () => {
 				draggable={false}
 				onHide={closeDialog}
 			>
-				<div className="flex flex-col gap-y-4">
-					<label>
-						Название вершины*
-						<InputText
-							className="w-full"
-							value={nodeLabel}
-							onChange={(e) => setNodeLabel(e.target.value)}
-						/>
-					</label>
-				</div>
+				<label>
+					Название вершины*
+					<InputText
+						className="w-full"
+						value={nodeLabel}
+						onChange={(e) => setNodeLabel(e.target.value)}
+					/>
+				</label>
 
 				<div className='mt-3'>
 					<p>* — обязательные поля</p>

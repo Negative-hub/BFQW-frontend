@@ -90,6 +90,7 @@ export const UpdateEdgeDialog: React.FunctionComponent<UpdateEdgeProps> = (props
 						value={updatedEdge.source}
 						optionLabel="label"
 						optionValue="id"
+						emptyMessage="Нет доступных вершин"
 						onChange={(e) => setUpdatedEdge({...updatedEdge, source: e.value})}
 					/>
 				</label>
@@ -102,6 +103,7 @@ export const UpdateEdgeDialog: React.FunctionComponent<UpdateEdgeProps> = (props
 						value={updatedEdge.target}
 						optionLabel="label"
 						optionValue="id"
+						emptyMessage="Нет доступных вершин"
 						onChange={(e) => setUpdatedEdge({...updatedEdge, target: e.value})}
 					/>
 				</label>

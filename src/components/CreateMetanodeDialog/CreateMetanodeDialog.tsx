@@ -85,6 +85,7 @@ export const CreateMetanodeDialog: React.FunctionComponent = () => {
 							options={metagraphNodes}
 							optionLabel="label"
 							optionValue="id"
+							emptyMessage="Нет доступных вершин"
 							onChange={(e) => setMetanode({...metanode, nodes: e.value})}
 						/>
 					</label>

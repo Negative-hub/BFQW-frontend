@@ -92,6 +92,7 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 							value={metagraphEdge.sourceId}
 							optionLabel="label"
 							optionValue="id"
+							emptyMessage="Нет доступных вершин"
 							onChange={(e) => setMetagraphEdge({...metagraphEdge, sourceId: e.value})}
 						/>
 					</label>
@@ -104,6 +105,7 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 							value={metagraphEdge.targetId}
 							optionLabel="label"
 							optionValue="id"
+							emptyMessage="Нет доступных вершин"
 							onChange={(e) => setMetagraphEdge({...metagraphEdge, targetId: e.value})}
 						/>
 					</label>

@@ -104,6 +104,7 @@ export const UpdateMetanodeDialog: React.FunctionComponent<UpdateMetanodeDialogP
 						options={nodesOptions}
 						optionLabel="label"
 						optionValue="id"
+						emptyMessage="Нет доступных вершин"
 						onChange={(e) => setUpdatedMetanode({...updatedMetanode, nodeIds: e.value})}
 					/>
 				</label>
@@ -116,6 +117,7 @@ export const UpdateMetanodeDialog: React.FunctionComponent<UpdateMetanodeDialogP
 						options={attributesOptions}
 						optionLabel="label"
 						optionValue="id"
+						emptyMessage="Нет доступных атрибутов"
 						onChange={(e) => setUpdatedMetanode({...updatedMetanode, attributeIds: e.value})}
 					/>
 				</label>
