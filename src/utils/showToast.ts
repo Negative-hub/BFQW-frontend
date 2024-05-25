@@ -6,5 +6,5 @@ export interface IToastParams {
 }
 
 export default function(params: IToastParams) {
-	toast[params.type](params.message);
+	toast[params.type](params.message, {autoClose: 2000});
 }

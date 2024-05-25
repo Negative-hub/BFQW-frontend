@@ -17,6 +17,7 @@ export const CreateModelDialog: React.FunctionComponent = () => {
 
 	const onCreateModel = async (payload: CreateModelPayload) => {
 		await appDispatch(createModelAsyncThunk(payload));
+		setModelName('');
 		closeDialog();
 	};
 
@@ -41,12 +42,17 @@ export const CreateModelDialog: React.FunctionComponent = () => {
 			>
 				<label>
 					Название модели*
+					<InputText
+						className="w-full"
+						value={modelName}
+						onChange={(e) => setModelName(e.target.value)}
+					/>
 				</label>
-				<InputText
-					className="w-full"
-					value={modelName}
-					onChange={(e) => setModelName(e.target.value)}
-				/>
+
+				<div className='mt-3'>
+					<p>* — обязательные поля</p>
+				</div>
+
 				<div className="mt-8 flex justify-between items-center gap-x-4">
 					<Button
 						className="w-full"

@@ -14,20 +14,17 @@ export const getAttributesAsyncThunk = createAsyncThunk(
 export const createAttributeAsyncThunk = createAsyncThunk(
 	'attributes/createAttribute',
 	async (payload: CreateAttributePayload): Promise<AttributeOption> => {
-		const attributes = await attributesApi.postAttribute(payload);
-		showToast({type: 'success', message: 'Атрибут успешно создан'});
-
-		return attributes;
+		return attributesApi.postAttribute(payload);
 	}
 );
 
 export const updateAttributeAsyncThunk = createAsyncThunk(
 	'attributes/updateAttribute',
 	async (payload: UpdateAttributePayload): Promise<Option> => {
-		const metanode = await attributesApi.updateAttribute(payload);
+		const attribute = attributesApi.updateAttribute(payload);
 		showToast({type: 'success', message: 'Атрибут успешно обновлен'});
 
-		return metanode;
+		return attribute;
 	}
 );
 

@@ -2,7 +2,7 @@ import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {Dropdown} from 'primereact/dropdown';
 import {InputText} from 'primereact/inputtext';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {CreateEdgePayload} from '@/api/edges';
 import {CreateEdgeState} from '@/components/CreateEdgeDialog/types.ts';
@@ -15,10 +15,16 @@ import showToast from '@/utils/showToast.ts';
 export const CreateEdgeDialog: React.FunctionComponent = () => {
 	const {appDispatch, appSelector} = useStore();
 	const {isVisible, openDialog, closeDialog} = useDialog();
+
+
+	const initMetagraphEdgeState = useCallback(
+		(): CreateEdgeState => ({label: '', sourceId: 0, targetId: 0}),
+		[],
+	);
 	const [
 		metagraphEdge,
 		setMetagraphEdge
-	] = useState<CreateEdgeState>({label: '', sourceId: 0, targetId: 0});
+	] = useState<CreateEdgeState>(initMetagraphEdgeState());
 
 	const selectedModel = appSelector((state) => state.models.selectedModel);
 	const metagraphNodes = appSelector((state) => state.metagraph.nodes);
@@ -34,6 +40,7 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 
 	const onCreateEdge = async (payload: CreateEdgePayload) => {
 		await appDispatch(createEdgeAsyncThunk(payload));
+		setMetagraphEdge(initMetagraphEdgeState());
 		closeDialog();
 	};
 
@@ -100,6 +107,10 @@ export const CreateEdgeDialog: React.FunctionComponent = () => {
 							onChange={(e) => setMetagraphEdge({...metagraphEdge, targetId: e.value})}
 						/>
 					</label>
+				</div>
+
+				<div className='mt-3'>
+					<p>* — обязательные поля</p>
 				</div>
 
 				<div className="mt-8 flex justify-between items-center gap-x-4">

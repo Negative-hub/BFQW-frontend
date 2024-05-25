@@ -13,7 +13,7 @@ import {
 	getMetanodesAsyncThunk,
 	updateMetanodeAsyncThunk
 } from '@/store/metagraph/async/metanodes.ts';
-import {UpdatedMetanode} from '@/types/node.ts';
+import {UpdatedMetanode} from '@/types/general.ts';
 
 export const UpdateMetanodeDialog: React.FunctionComponent<UpdateMetanodeDialogProps> = (props: UpdateMetanodeDialogProps) => {
 	const {appSelector, appDispatch} = useStore();
@@ -74,69 +74,71 @@ export const UpdateMetanodeDialog: React.FunctionComponent<UpdateMetanodeDialogP
 	};
 
 	const onDeleteMetanode = async () => {
-		await appDispatch(deleteMetanodeAsyncThunk({metanodeId: updatedMetanode.id}));
+		await appDispatch(deleteMetanodeAsyncThunk({metanodeId: updatedMetanode.id, cluster: props.cluster}));
 		props.onClose();
 	};
 
 	return (
-		<>
-			<Dialog
-				header="Изменить метавешину"
-				visible={props.isVisible}
-				style={{width: '30vw'}}
-				draggable={false}
-				onHide={props.onClose}
-			>
-				<div className="flex flex-col gap-y-4">
-					<label>
-						Название метавершины*
-						<InputText
-							className="w-full"
-							value={updatedMetanode.label}
-							onChange={(e) => setUpdatedMetanode({...updatedMetanode, label: e.target.value})}
-						/>
-					</label>
-
-					<label>
-						Вершины*
-						<MultiSelect
-							className="w-full"
-							value={updatedMetanode.nodeIds}
-							options={nodesOptions}
-							optionLabel="label"
-							optionValue="id"
-							onChange={(e) => setUpdatedMetanode({...updatedMetanode, nodeIds: e.value})}
-						/>
-					</label>
-
-					<label>
-						Аттрибуты метавершины
-						<MultiSelect
-							className="w-full"
-							value={updatedMetanode.attributeIds}
-							options={attributesOptions}
-							optionLabel="label"
-							optionValue="id"
-							onChange={(e) => setUpdatedMetanode({...updatedMetanode, attributeIds: e.value})}
-						/>
-					</label>
-				</div>
-
-				<div className="mt-8 flex justify-between items-center gap-x-4">
-					<Button
+		<Dialog
+			header="Изменить метавешину"
+			visible={props.isVisible}
+			style={{width: '30vw'}}
+			draggable={false}
+			onHide={props.onClose}
+		>
+			<div className="flex flex-col gap-y-4">
+				<label>
+					Название метавершины*
+					<InputText
 						className="w-full"
-						label="Удалить вершину"
-						severity="danger"
-						onClick={onDeleteMetanode}
+						value={updatedMetanode.label}
+						onChange={(e) => setUpdatedMetanode({...updatedMetanode, label: e.target.value})}
 					/>
-					<Button
+				</label>
+
+				<label>
+					Вершины*
+					<MultiSelect
 						className="w-full"
-						label="Сохранить"
-						disabled={!isCanCreateMetanode}
-						onClick={onClickSave}
+						value={updatedMetanode.nodeIds}
+						options={nodesOptions}
+						optionLabel="label"
+						optionValue="id"
+						onChange={(e) => setUpdatedMetanode({...updatedMetanode, nodeIds: e.value})}
 					/>
-				</div>
-			</Dialog>
-		</>
+				</label>
+
+				<label>
+					Аттрибуты метавершины
+					<MultiSelect
+						className="w-full"
+						value={updatedMetanode.attributeIds}
+						options={attributesOptions}
+						optionLabel="label"
+						optionValue="id"
+						onChange={(e) => setUpdatedMetanode({...updatedMetanode, attributeIds: e.value})}
+					/>
+				</label>
+			</div>
+
+			<div className='mt-3'>
+				<p>* - обязательные поля</p>
+			</div>
+
+			<div className="mt-8 flex justify-between items-center gap-x-4">
+				<Button
+					className="w-full"
+					label="Удалить вершину"
+					severity="danger"
+					onClick={onDeleteMetanode}
+				/>
+				<Button
+					className="w-full"
+					label="Сохранить"
+					disabled={!isCanCreateMetanode}
+					onClick={onClickSave}
+				/>
+			</div>
+		</Dialog>
 	);
 };

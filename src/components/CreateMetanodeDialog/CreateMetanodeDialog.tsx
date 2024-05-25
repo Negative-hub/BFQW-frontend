@@ -2,7 +2,7 @@ import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {InputText} from 'primereact/inputtext';
 import {MultiSelect} from 'primereact/multiselect';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {CreateMetanodePayload} from '@/api/metanodes';
 import {CreateMetanodeState} from '@/components/CreateMetanodeDialog/types.ts';
@@ -15,7 +15,12 @@ import showToast from '@/utils/showToast.ts';
 export const CreateMetanodeDialog: React.FunctionComponent = () => {
 	const {appSelector, appDispatch} = useStore();
 	const {isVisible, openDialog, closeDialog} = useDialog();
-	const [metanode, setMetanode] = useState<CreateMetanodeState>({label: '', nodes: []});
+
+	const initMetanodeState = useCallback(
+		(): CreateMetanodeState => ({label: '', nodes: []}),
+		[],
+	);
+	const [metanode, setMetanode] = useState<CreateMetanodeState>(initMetanodeState());
 
 	const selectedModel = appSelector((state) => state.models.selectedModel);
 	const metagraphNodes = appSelector((state) => state.metagraph.nodes);
@@ -30,6 +35,7 @@ export const CreateMetanodeDialog: React.FunctionComponent = () => {
 
 	const onCreateMetanode = async (payload: CreateMetanodePayload) => {
 		await appDispatch(createMetanodeAsyncThunk(payload));
+		setMetanode(initMetanodeState());
 		closeDialog();
 	};
 
@@ -82,6 +88,10 @@ export const CreateMetanodeDialog: React.FunctionComponent = () => {
 							onChange={(e) => setMetanode({...metanode, nodes: e.value})}
 						/>
 					</label>
+				</div>
+
+				<div className='mt-3'>
+					<p>* — обязательные поля</p>
 				</div>
 
 				<div className="mt-8 flex justify-between items-center gap-x-4">

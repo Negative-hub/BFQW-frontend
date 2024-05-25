@@ -2,7 +2,7 @@ import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {Dropdown} from 'primereact/dropdown';
 import {InputText} from 'primereact/inputtext';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {CreateAttributePayload} from '@/api/attributes';
 import {CreateAttributeState} from '@/components/CreateAttributeDialog/types.ts';
@@ -16,10 +16,15 @@ import showToast from '@/utils/showToast.ts';
 export const CreateAttributeDialog: React.FunctionComponent = () => {
 	const {appDispatch, appSelector} = useStore();
 	const {isVisible, openDialog, closeDialog} = useDialog();
+
+	const initAttributeState = useCallback(
+		(): CreateAttributeState => ({label: '', nodeId: null, metanodeId: null}),
+	[],
+	);
 	const [
 		attribute,
 		setAttribute
-	] = useState<CreateAttributeState>({label: '', nodeId: null, metanodeId: null});
+	] = useState<CreateAttributeState>(initAttributeState());
 
 	const selectedModel = appSelector((state) => state.models.selectedModel);
 	const metagraphNodes = appSelector((state) => state.metagraph.nodes);
@@ -36,6 +41,7 @@ export const CreateAttributeDialog: React.FunctionComponent = () => {
 
 	const onCreateAttribute = async (payload: CreateAttributePayload) => {
 		await appDispatch(createAttributeAsyncThunk(payload));
+		setAttribute(initAttributeState());
 		closeDialog();
 	};
 
@@ -79,7 +85,7 @@ export const CreateAttributeDialog: React.FunctionComponent = () => {
 					</label>
 
 					<label>
-						Выберите вершину
+						Выберите вершину**
 						<Dropdown
 							className="w-full"
 							value={attribute.nodeId}
@@ -91,7 +97,7 @@ export const CreateAttributeDialog: React.FunctionComponent = () => {
 					</label>
 
 					<label>
-						Выберите метавершину
+						Выберите метавершину**
 						<Dropdown
 							className="w-full"
 							value={attribute.metanodeId}
@@ -101,6 +107,11 @@ export const CreateAttributeDialog: React.FunctionComponent = () => {
 							onChange={(e) => setAttribute({...attribute, metanodeId: e.value})}
 						/>
 					</label>
+				</div>
+
+				<div className='mt-3'>
+					<p>* — обязательные поля</p>
+					<p>** — поля на выбор</p>
 				</div>
 
 				<div className="mt-8 flex justify-between items-center gap-x-4">

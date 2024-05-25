@@ -24,3 +24,22 @@ export interface MetagraphEdge extends GraphEdge {
 	source: string;
 	target: string;
 }
+
+export interface ErrorResponse {
+	status: number,
+	message: string
+}
+
+export interface UpdatedNode {
+	id: number;
+	label: string;
+	attributeIds: number[];
+	metanodeId: number | null;
+}
+
+export interface UpdatedMetanode {
+	id: number;
+	label: string;
+	attributeIds: number[];
+	nodeIds: string[];
+}

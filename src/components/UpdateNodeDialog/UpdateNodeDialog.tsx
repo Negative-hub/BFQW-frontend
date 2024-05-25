@@ -11,7 +11,7 @@ import {useStore} from '@/hooks/useStore.ts';
 import {getAttributesAsyncThunk} from '@/store/metagraph/async/attributes.ts';
 import {getMetanodesAsyncThunk} from '@/store/metagraph/async/metanodes.ts';
 import {deleteNodeAsyncThunk, updateNodeAsyncThunk} from '@/store/metagraph/async/nodes.ts';
-import {UpdatedNode} from '@/types/node.ts';
+import {UpdatedNode} from '@/types/general.ts';
 import showToast from '@/utils/showToast.ts';
 
 export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = (props: UpdateNodeDialogProps) => {
@@ -79,64 +79,66 @@ export const UpdateNodeDialog: React.FunctionComponent<UpdateNodeDialogProps> = 
 	};
 
 	return (
-		<>
-			<Dialog
-				header="Изменить вершину"
-				visible={props.isVisible}
-				style={{width: '30vw'}}
-				draggable={false}
-				onHide={props.onClose}
-			>
-				<div className="flex flex-col gap-y-4">
-					<label>
-						Название вершины*
-						<InputText
-							className="w-full"
-							value={node.label}
-							onChange={(e) => setNode({...node, label: e.target.value})}
-						/>
-					</label>
-
-					<label>
-						Аттрибуты вершины
-						<MultiSelect
-							className="w-full"
-							value={node.attributeIds}
-							options={attributesOptions}
-							optionLabel="label"
-							optionValue="id"
-							onChange={(e) => setNode({...node, attributeIds: e.value})}
-						/>
-					</label>
-
-					<label>
-						Метавершина
-						<Dropdown
-							className="w-full"
-							value={node.metanodeId}
-							options={metanodesOptions}
-							optionLabel="name"
-							optionValue="id"
-							onChange={(e) => setNode({...node, metanodeId: e.value})}
-						/>
-					</label>
-				</div>
-
-				<div className="mt-8 flex justify-between items-center gap-x-4">
-					<Button
+		<Dialog
+			header="Изменить вершину"
+			visible={props.isVisible}
+			style={{width: '30vw'}}
+			draggable={false}
+			onHide={props.onClose}
+		>
+			<div className="flex flex-col gap-y-4">
+				<label>
+					Название вершины*
+					<InputText
 						className="w-full"
-						label="Удалить вершину"
-						severity="danger"
-						onClick={onDeleteNode}
+						value={node.label}
+						onChange={(e) => setNode({...node, label: e.target.value})}
 					/>
-					<Button
+				</label>
+
+				<label>
+					Аттрибуты вершины
+					<MultiSelect
 						className="w-full"
-						label="Сохранить"
-						disabled={!isCanCreateNode}
-						onClick={onClickSave}
+						value={node.attributeIds}
+						options={attributesOptions}
+						optionLabel="label"
+						optionValue="id"
+						onChange={(e) => setNode({...node, attributeIds: e.value})}
 					/>
-				</div>
-			</Dialog>
-		</>
+				</label>
+
+				<label>
+					Метавершина
+					<Dropdown
+						className="w-full"
+						value={node.metanodeId}
+						options={metanodesOptions}
+						optionLabel="name"
+						optionValue="id"
+						onChange={(e) => setNode({...node, metanodeId: e.value})}
+					/>
+				</label>
+			</div>
+
+			<div className='mt-3'>
+				<p>* - обязательные поля</p>
+			</div>
+
+			<div className="mt-8 flex justify-between items-center gap-x-4">
+				<Button
+					className="w-full"
+					label="Удалить вершину"
+					severity="danger"
+					onClick={onDeleteNode}
+				/>
+				<Button
+					className="w-full"
+					label="Сохранить"
+					disabled={!isCanCreateNode}
+					onClick={onClickSave}
+				/>
+			</div>
+		</Dialog>
 	);
 };

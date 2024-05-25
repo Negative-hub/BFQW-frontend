@@ -13,6 +13,7 @@ import {MetagraphEdge} from '@/types/general.ts';
 
 export const UpdateEdgeDialog: React.FunctionComponent<UpdateEdgeProps> = (props: UpdateEdgeProps) => {
 	const {appDispatch, appSelector} = useStore();
+
 	const [
 		updatedEdge,
 		setUpdatedEdge
@@ -63,65 +64,67 @@ export const UpdateEdgeDialog: React.FunctionComponent<UpdateEdgeProps> = (props
 	};
 
 	return (
-		<>
-			<Dialog
-				header="Изменить ребро"
-				visible={props.isVisible}
-				style={{width: '30vw'}}
-				draggable={false}
-				onHide={props.onClose}
-			>
-				<div className="flex flex-col gap-y-4">
-					<label htmlFor="edge-label">
-						Название ребра*
-						<InputText
-							className="w-full"
-							id="edge-label"
-							value={updatedEdge.label}
-							onChange={(e) => setUpdatedEdge({...updatedEdge, label: e.target.value})}
-						/>
-					</label>
-
-					<label>
-						Выберите источник*
-						<Dropdown
-							className="w-full"
-							options={metagraphNodes}
-							value={updatedEdge.source}
-							optionLabel="label"
-							optionValue="id"
-							onChange={(e) => setUpdatedEdge({...updatedEdge, source: e.value})}
-						/>
-					</label>
-
-					<label>
-						Выберите цель*
-						<Dropdown
-							className="w-full"
-							options={metagraphNodes}
-							value={updatedEdge.target}
-							optionLabel="label"
-							optionValue="id"
-							onChange={(e) => setUpdatedEdge({...updatedEdge, target: e.value})}
-						/>
-					</label>
-				</div>
-
-				<div className="mt-8 flex justify-between items-center gap-x-4">
-					<Button
+		<Dialog
+			header="Изменить ребро"
+			visible={props.isVisible}
+			style={{width: '30vw'}}
+			draggable={false}
+			onHide={props.onClose}
+		>
+			<div className="flex flex-col gap-y-4">
+				<label htmlFor="edge-label">
+					Название ребра*
+					<InputText
 						className="w-full"
-						label="Удалить ребро"
-						severity="danger"
-						onClick={onDeleteEdge}
+						id="edge-label"
+						value={updatedEdge.label}
+						onChange={(e) => setUpdatedEdge({...updatedEdge, label: e.target.value})}
 					/>
-					<Button
+				</label>
+
+				<label>
+					Выберите источник*
+					<Dropdown
 						className="w-full"
-						label="Сохранить"
-						disabled={!isCanUpdateEdge}
-						onClick={onClickSave}
+						options={metagraphNodes}
+						value={updatedEdge.source}
+						optionLabel="label"
+						optionValue="id"
+						onChange={(e) => setUpdatedEdge({...updatedEdge, source: e.value})}
 					/>
-				</div>
-			</Dialog>
-		</>
+				</label>
+
+				<label>
+					Выберите цель*
+					<Dropdown
+						className="w-full"
+						options={metagraphNodes}
+						value={updatedEdge.target}
+						optionLabel="label"
+						optionValue="id"
+						onChange={(e) => setUpdatedEdge({...updatedEdge, target: e.value})}
+					/>
+				</label>
+			</div>
+
+			<div className='mt-3'>
+				<p>* - обязательные поля</p>
+			</div>
+
+			<div className="mt-8 flex justify-between items-center gap-x-4">
+				<Button
+					className="w-full"
+					label="Удалить ребро"
+					severity="danger"
+					onClick={onDeleteEdge}
+				/>
+				<Button
+					className="w-full"
+					label="Сохранить"
+					disabled={!isCanUpdateEdge}
+					onClick={onClickSave}
+				/>
+			</div>
+		</Dialog>
 	);
 };

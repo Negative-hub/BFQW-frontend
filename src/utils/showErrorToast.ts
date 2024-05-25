@@ -1,7 +1,7 @@
 import {isAxiosError} from 'axios';
 import {toast} from 'react-toastify';
 
-import {ErrorResponse} from '@/types/error.ts';
+import {ErrorResponse} from '@/types/general.ts';
 
 export default function(error: unknown) {
 	if (!isAxiosError(error)) {
@@ -15,5 +15,5 @@ export default function(error: unknown) {
 	}
 
 	const errorResponse = error.response.data as ErrorResponse;
-	toast.error(errorResponse.message);
+	toast.error(errorResponse.message, {autoClose: 2000});
 }

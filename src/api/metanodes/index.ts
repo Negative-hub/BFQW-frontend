@@ -1,6 +1,5 @@
 import {instance} from '@/api/instance.ts';
-import {MetagraphNode, Option} from '@/types/general.ts';
-import {UpdatedMetanode} from '@/types/node.ts';
+import {MetagraphNode, Option, UpdatedMetanode} from '@/types/general.ts';
 
 export interface GetMetanodesParams {
 	modelId: number;

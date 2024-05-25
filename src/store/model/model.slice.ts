@@ -36,7 +36,7 @@ const modelSlice = createSlice({
 			state.models = state.models.filter((model) => model.id !== action.payload);
 
 			if (state.selectedModel && state.selectedModel.id === action.payload) {
-				state.selectedModel = null;
+				state.selectedModel = state.models[0] ? state.models[0] : null;
 			}
 		});
 	}

@@ -95,7 +95,7 @@ export const Metagraph: React.FunctionComponent = () => {
 	};
 
 	return (
-		<article className="flex flex-col w-full">
+		<article className="flex flex-col w-full pr-2">
 			<div className="flex justify-between items-center">
 				<h2 className="text-xl font-bold">
 					{selectedModel ? selectedModel.name : 'Выберите модель'}
@@ -103,13 +103,16 @@ export const Metagraph: React.FunctionComponent = () => {
 				{
 					!!selectedModel &&
 					<div className="flex gap-x-2 items-center">
-						<Button
-							className="text-sm"
-							label="Экспортировать модель"
-							severity="info"
-							size="small"
-							onClick={onClickExportMetagraph}
-						/>
+						{
+							!!metagraphNodes.length &&
+							<Button
+								className="text-sm"
+								label="Экспортировать модель"
+								severity="info"
+								size="small"
+								onClick={onClickExportMetagraph}
+							/>
+						}
 						<Button
 							className="text-sm"
 							label="Удалить модель"

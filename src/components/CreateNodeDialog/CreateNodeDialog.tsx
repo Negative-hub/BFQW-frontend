@@ -12,7 +12,7 @@ import showToast from '@/utils/showToast.ts';
 export const CreateNodeDialog: React.FunctionComponent = () => {
 	const {appDispatch, appSelector} = useStore();
 	const {isVisible, openDialog, closeDialog} = useDialog();
-	const [nodeLabel, setNodeLabel] = useState<string>('');
+	const [nodeLabel, setNodeLabel] = useState('');
 
 	const selectedModel = appSelector((state) => state.models.selectedModel);
 
@@ -20,6 +20,7 @@ export const CreateNodeDialog: React.FunctionComponent = () => {
 
 	const onCreateNode = async (payload: CreateNodePayload) => {
 		await appDispatch(createNodeAsyncThunk(payload));
+		setNodeLabel('');
 		closeDialog();
 	};
 
@@ -61,6 +62,10 @@ export const CreateNodeDialog: React.FunctionComponent = () => {
 							onChange={(e) => setNodeLabel(e.target.value)}
 						/>
 					</label>
+				</div>
+
+				<div className='mt-3'>
+					<p>* — обязательные поля</p>
 				</div>
 
 				<div className="mt-8 flex justify-between items-center gap-x-4">
