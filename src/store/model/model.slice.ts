@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 import {createModelAsyncThunk, deleteModelAsyncThunk, fetchModelsAsyncThunk} from '@/store/model/async/models.ts';
 import {Option} from '@/types/general.ts';
+import showToast from '@/utils/showToast.ts';
 
 interface ModelsState {
 	models: Option[];
@@ -28,11 +29,13 @@ const modelSlice = createSlice({
 		});
 
 		builder.addCase(createModelAsyncThunk.fulfilled, (state, action) => {
+			showToast({type: 'success', message: 'Модель успешно создана'});
 			state.models.push(action.payload);
 			state.selectedModel = action.payload;
 		});
 
 		builder.addCase(deleteModelAsyncThunk.fulfilled, (state, action) => {
+			showToast({type: 'success', message: 'Модель успешно удалена'});
 			state.models = state.models.filter((model) => model.id !== action.payload);
 
 			if (state.selectedModel && state.selectedModel.id === action.payload) {
