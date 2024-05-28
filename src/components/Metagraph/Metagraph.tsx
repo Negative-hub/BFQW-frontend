@@ -1,6 +1,14 @@
+import {ThreeEvent} from '@react-three/fiber';
 import {Button} from 'primereact/button';
 import React, {useRef, useState} from 'react';
-import {ClusterEventArgs, GraphCanvas, GraphCanvasRef, InternalGraphEdge, InternalGraphNode} from 'reagraph';
+import {
+	ClusterEventArgs,
+	CollapseProps,
+	GraphCanvas,
+	GraphCanvasRef,
+	InternalGraphEdge,
+	InternalGraphNode
+} from 'reagraph';
 
 import Font from '@/assets/font/Anonymous.ttf';
 import {UpdateEdgeDialog} from '@/components/UpdateEdgeDialog';
@@ -40,7 +48,8 @@ export const Metagraph: React.FunctionComponent = () => {
 		closeDialog: closeUpdateMetanodeDialog
 	} = useDialog();
 
-	const onNodeClickHandler = (node: InternalGraphNode) => {
+	const onNodeClickHandler = (node: InternalGraphNode, _props?: CollapseProps, event?: ThreeEvent<MouseEvent>) => {
+		event?.stopPropagation();
 		setSelectedNodeId(node.id);
 		onOpenUpdateNodeDialog();
 	};
@@ -63,7 +72,6 @@ export const Metagraph: React.FunctionComponent = () => {
 	const onClusterClickHandler = (cluster: ClusterEventArgs) => {
 		setSelectedCluster(cluster.nodes.map((node) => +node.id));
 		onOpenUpdateMetanodeDialog();
-		closeUpdateNodeDialog();
 	};
 
 	const onCloseUpdateClusterDialog = () => {
