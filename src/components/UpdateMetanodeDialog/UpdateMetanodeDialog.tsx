@@ -130,7 +130,7 @@ export const UpdateMetanodeDialog: React.FunctionComponent<UpdateMetanodeDialogP
 			<div className="mt-8 flex justify-between items-center gap-x-4">
 				<Button
 					className="w-full"
-					label="Удалить вершину"
+					label="Удалить метавершину"
 					severity="danger"
 					onClick={onDeleteMetanode}
 				/>
