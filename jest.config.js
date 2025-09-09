@@ -1,6 +1,4 @@
-import type { Config } from 'jest';
-
-const config: Config = {
+const config = {
   testEnvironment: 'jsdom',
   roots: ['<rootDir>/src'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
