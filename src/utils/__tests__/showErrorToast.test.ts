@@ -21,6 +21,7 @@ describe('showErrorToast', () => {
   });
 
   it('должен показать "Неизвестная ошибка" для не-Axios ошибок', () => {
+    // @ts-ignore
     (isAxiosError as jest.Mock).mockReturnValue(false);
     const error = new Error('Обычная ошибка');
 
@@ -64,6 +65,7 @@ describe('showErrorToast', () => {
   // });
 
   it('должен обработать null/undefined error', () => {
+    // @ts-ignore
     (isAxiosError as jest.Mock).mockReturnValue(false);
 
     showErrorToast(null);
@@ -73,6 +75,7 @@ describe('showErrorToast', () => {
   });
 
   it('должен обработать строковую ошибку', () => {
+    // @ts-ignore
     (isAxiosError as jest.Mock).mockReturnValue(false);
 
     showErrorToast('Произошла ошибка');
