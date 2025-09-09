@@ -1,1 +1,1 @@
-export {CreateNodeDialog} from './CreateNodeDialog.tsx';
+export {CreateEdgeDialog} from './CreateEdgeDialog.tsx';

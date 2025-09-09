@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
-import { AxiosError, isAxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import showErrorToast from '../showErrorToast';
-import { ErrorResponse } from '@/types/general';
 
 
 // Мокаем react-toastify
