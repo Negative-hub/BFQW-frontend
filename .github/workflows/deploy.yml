@@ -40,5 +40,5 @@ jobs:
       # ---- Frontend ----
       - name: Build and Push Frontend
         run: |
-          docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp-frontend:latest ./frontend
+          docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp-frontend:latest ./
           docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp-frontend:latest
