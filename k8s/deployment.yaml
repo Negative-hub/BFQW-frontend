@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: cr.yandex/<REG_ID>/myapp-frontend:latest
+          image: cr.yandex/crpgp99p6ne65krtvvmq/myapp-frontend:latest
           ports:
             - containerPort: 80
           resources:
