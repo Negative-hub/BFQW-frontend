@@ -15,7 +15,7 @@ import {fetchModelsAsyncThunk} from '@/store/model/async/models.ts';
 import {setSelectedModel} from '@/store/model/model.slice.ts';
 
 export const App: React.FunctionComponent = () => {
-	console.log(1);
+	// console.log(1);
 	const {appDispatch, appSelector} = useStore();
 
 	const modelsOptions = appSelector((state) => state.models.models);
